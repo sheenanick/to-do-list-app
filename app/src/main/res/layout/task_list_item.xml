@@ -23,8 +23,17 @@
         android:layout_gravity="center"
         android:textColor="@color/colorPrimary" />
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_reorder_black_24dp"/>
+    </RelativeLayout>
+
 
 </LinearLayout>
