@@ -3,6 +3,7 @@ package com.epicodus.todolist.models;
 public class Task {
     private String description;
     private boolean isComplete;
+    private String pushId;
 
     public Task() {}
 
@@ -25,5 +26,13 @@ public class Task {
 
     public void setComplete(boolean complete) {
         isComplete = complete;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
