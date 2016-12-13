@@ -63,8 +63,8 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     }
 
     @Override
-    protected void populateViewHolder(final FirebaseTaskViewHolder viewHolder, Task model, int position) {
-        mTask = model;
+    protected void populateViewHolder(final FirebaseTaskViewHolder viewHolder, final Task model, final int position) {
+//        mTask = model;
         viewHolder.bindTask(model);
         viewHolder.mTaskDescription.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -79,11 +79,13 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
             @Override
             public void onClick(View v) {
                 if (viewHolder.mCheckBox.isChecked()) {
-                    mTask.setComplete(true);
+//                    model.setComplete(true);
                     viewHolder.mTaskDescription.setTextColor(Color.parseColor("#A9A9A9"));
+                    mTasks.get(position).setComplete(true);
                 } else {
-                    mTask.setComplete(false);
+                    model.setComplete(false);
                     viewHolder.mTaskDescription.setTextColor(Color.parseColor("#3F51B5"));
+                    mTasks.get(position).setComplete(false);
                 }
             }
         });
