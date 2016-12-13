@@ -1,6 +1,7 @@
 package com.epicodus.todolist.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     private Context mContext;
     private ChildEventListener mChildEventListener;
     private ArrayList<Task> mTasks = new ArrayList<>();
+    private Task mTask;
 
     public FirebaseTaskListAdapter(Class<Task> modelClass, int modelLayout, Class<FirebaseTaskViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
@@ -61,6 +64,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
 
     @Override
     protected void populateViewHolder(final FirebaseTaskViewHolder viewHolder, Task model, int position) {
+        mTask = model;
         viewHolder.bindTask(model);
         viewHolder.mTaskDescription.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -69,6 +73,18 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
                     mOnStartDragListener.onStartDrag(viewHolder);
                 }
                 return false;
+            }
+        });
+        viewHolder.mCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewHolder.mCheckBox.isChecked()) {
+                    mTask.setComplete(true);
+                    viewHolder.mTaskDescription.setTextColor(Color.parseColor("#A9A9A9"));
+                } else {
+                    mTask.setComplete(false);
+                    viewHolder.mTaskDescription.setTextColor(Color.parseColor("#3F51B5"));
+                }
             }
         });
     }
