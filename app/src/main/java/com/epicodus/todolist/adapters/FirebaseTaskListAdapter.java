@@ -26,7 +26,6 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     private Context mContext;
     private ChildEventListener mChildEventListener;
     private ArrayList<Task> mTasks = new ArrayList<>();
-    private Task mTask;
 
     public FirebaseTaskListAdapter(Class<Task> modelClass, int modelLayout, Class<FirebaseTaskViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
@@ -42,29 +41,24 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
 
     @Override
     protected void populateViewHolder(final FirebaseTaskViewHolder viewHolder, final Task model, final int position) {
-//        mTask = model;
         viewHolder.bindTask(model);
         viewHolder.mTaskDescription.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -79,11 +73,9 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
             @Override
             public void onClick(View v) {
                 if (viewHolder.mCheckBox.isChecked()) {
-//                    model.setComplete(true);
                     viewHolder.mTaskDescription.setTextColor(Color.parseColor("#A9A9A9"));
                     mTasks.get(position).setComplete(true);
                 } else {
-                    model.setComplete(false);
                     viewHolder.mTaskDescription.setTextColor(Color.parseColor("#3F51B5"));
                     mTasks.get(position).setComplete(false);
                 }
