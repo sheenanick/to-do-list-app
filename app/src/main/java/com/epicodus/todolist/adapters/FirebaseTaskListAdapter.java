@@ -96,6 +96,18 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
         getRef(position).removeValue();
     }
 
+    private void moveComplete() {
+        for (Task task : mTasks) {
+            boolean complete = task.isComplete();
+            int index = mTasks.indexOf(task);
+            if (complete) {
+                FirebaseDatabase.getInstance().getReference("complete").child(task.getPushId()).setValue(task);
+                mTasks.remove(index);
+                getRef(index).removeValue();
+            }
+        }
+    }
+
     private void setIndexInFirebase() {
         for (Task task : mTasks) {
             int index = mTasks.indexOf(task);
@@ -108,6 +120,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     @Override
     public void cleanup() {
         super.cleanup();
+        moveComplete();
         setIndexInFirebase();
         mRef.removeEventListener(mChildEventListener);
     }
