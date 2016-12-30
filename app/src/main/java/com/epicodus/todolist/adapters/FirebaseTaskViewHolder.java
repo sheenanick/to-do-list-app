@@ -26,8 +26,9 @@ public class FirebaseTaskViewHolder extends RecyclerView.ViewHolder {
         mCheckBox = (CheckBox) mView.findViewById(R.id.checkBox);
         mTaskDescription = (TextView) mView.findViewById(R.id.taskDescription);
         mTaskDescription.setText(task.getDescription());
-        mCheckBox.setChecked(task.isComplete());
-        if (task.isComplete()) {
+        boolean completed = task.isComplete();
+        mCheckBox.setChecked(completed);
+        if (completed) {
             mTaskDescription.setTextColor(Color.parseColor("#A9A9A9"));
         }
     }
