@@ -8,6 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.epicodus.todolist.R;
 import com.epicodus.todolist.adapters.FirebaseTaskListAdapter;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.newTaskEditText) EditText mNewTask;
     @Bind(R.id.addButton) Button mAddButton;
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
+    @Bind(R.id.completedRecyclerView) RecyclerView mCompletedRecyclerView;
+    @Bind(R.id.showCompleted) TextView mShowCompletedTextView;
 
     private FirebaseTaskListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
