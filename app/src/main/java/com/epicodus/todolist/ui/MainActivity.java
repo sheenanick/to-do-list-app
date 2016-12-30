@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
 
         mAddButton.setOnClickListener(this);
+        mShowCompletedTextView.setOnClickListener(this);
 
         setUpFirebaseAdapter();
     }
