@@ -1,4 +1,4 @@
-# To-do List App
+# To-Do List App
 
 #### _Epicodus - Android Week 4, 12.12.2016_
 
