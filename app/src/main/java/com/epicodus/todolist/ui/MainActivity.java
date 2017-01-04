@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
     @Bind(R.id.completedRecyclerView) RecyclerView mCompletedRecyclerView;
     @Bind(R.id.showCompleted) TextView mShowCompletedTextView;
+    @Bind(R.id.hideCompleted) TextView mHideCompletedTextView;
 
     private FirebaseTaskListAdapter mTaskFirebaseAdapter;
     private FirebaseTaskListAdapter mCompletedFirebaseAdapter;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mAddButton.setOnClickListener(this);
         mShowCompletedTextView.setOnClickListener(this);
+        mHideCompletedTextView.setOnClickListener(this);
 
         setUpFirebaseAdapter();
     }
@@ -72,13 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTaskFirebaseAdapter.moveComplete();
-        mCompletedFirebaseAdapter.moveToTasks();
-    }
-
-    @Override
     public void onClick(View v) {
         if (v == mAddButton) {
             String newTask = mNewTask.getText().toString().trim();
@@ -92,12 +87,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mNewTask.setText("");
         }
         if (v == mShowCompletedTextView) {
-            
+            mTaskFirebaseAdapter.moveComplete();
+            mCompletedFirebaseAdapter.moveToTasks();
+            mCompletedRecyclerView.setVisibility(View.VISIBLE);
+            mShowCompletedTextView.setVisibility(View.GONE);
+            mHideCompletedTextView.setVisibility(View.VISIBLE);
+        }
+        if (v == mHideCompletedTextView) {
+            mTaskFirebaseAdapter.moveComplete();
+            mCompletedFirebaseAdapter.moveToTasks();
+            mCompletedRecyclerView.setVisibility(View.GONE);
+            mShowCompletedTextView.setVisibility(View.VISIBLE);
+            mHideCompletedTextView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTaskFirebaseAdapter.moveComplete();
+        mCompletedFirebaseAdapter.moveToTasks();
+        mTaskFirebaseAdapter.cleanup();
+        mCompletedFirebaseAdapter.cleanup();
     }
 }
