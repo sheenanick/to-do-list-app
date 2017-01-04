@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.completedRecyclerView) RecyclerView mCompletedRecyclerView;
     @Bind(R.id.showCompleted) TextView mShowCompletedTextView;
 
-    private FirebaseTaskListAdapter mFirebaseAdapter;
+    private FirebaseTaskListAdapter mTaskFirebaseAdapter;
+    private FirebaseTaskListAdapter mCompletedFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
     @Override
@@ -46,23 +47,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setUpFirebaseAdapter() {
-        Query query = FirebaseDatabase.getInstance().getReference("tasks").orderByChild("index");
+        Query tasks = FirebaseDatabase.getInstance().getReference("tasks").orderByChild("index");
 
-        mFirebaseAdapter = new FirebaseTaskListAdapter(Task.class,
-                R.layout.task_list_item, FirebaseTaskViewHolder.class, query, this, this);
+        mTaskFirebaseAdapter = new FirebaseTaskListAdapter(Task.class,
+                R.layout.task_list_item, FirebaseTaskViewHolder.class, tasks, this, this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mRecyclerView.setAdapter(mTaskFirebaseAdapter);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mTaskFirebaseAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        Query completed = FirebaseDatabase.getInstance().getReference("complete").orderByChild("index");
+        mCompletedFirebaseAdapter = new FirebaseTaskListAdapter(Task.class,
+                R.layout.task_list_item, FirebaseTaskViewHolder.class, completed, this, this);
+
+        mCompletedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCompletedRecyclerView.setAdapter(mCompletedFirebaseAdapter);
+
+        ItemTouchHelper.Callback completedCallback = new SimpleItemTouchHelperCallback(mCompletedFirebaseAdapter);
+        mItemTouchHelper = new ItemTouchHelper(completedCallback);
+        mItemTouchHelper.attachToRecyclerView(mCompletedRecyclerView);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mFirebaseAdapter.cleanup();
+        mTaskFirebaseAdapter.moveComplete();
     }
 
     @Override
@@ -77,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pushRef.setValue(task);
 
             mNewTask.setText("");
+        }
+        if (v == mShowCompletedTextView) {
+            
         }
     }
 
