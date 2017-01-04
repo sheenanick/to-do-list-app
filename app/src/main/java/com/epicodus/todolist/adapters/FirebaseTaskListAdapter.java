@@ -28,7 +28,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     private Context mContext;
     private ChildEventListener mChildEventListener;
     private ArrayList<Task> mTasks = new ArrayList<>();
-    private ArrayList<Integer> mTasksToMove = new ArrayList<>();
+    private ArrayList<Task> mTasksToMove = new ArrayList<>();
 
     public FirebaseTaskListAdapter(Class<Task> modelClass, int modelLayout, Class<FirebaseTaskViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
@@ -36,6 +36,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
         mOnStartDragListener = onStartDragListener;
         mContext = context;
         mTasks = new ArrayList<>();
+        mTasksToMove = new ArrayList<>();
 
         mChildEventListener = mRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -102,19 +103,34 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
 
     public void moveComplete() {
         for (Task task : mTasks) {
+            Log.d("mTASKS", "#" + mTasks.indexOf(task) + ": " + task.getDescription());
             boolean complete = task.isComplete();
-            Integer index = mTasks.indexOf(task);
             if (complete) {
                 FirebaseDatabase.getInstance().getReference("complete").child(task.getPushId()).setValue(task);
-                mTasksToMove.add(index);
+                mTasksToMove.add(task);
+                Log.d("INDEX of Complete", task.getDescription());
             }
         }
-        for (Integer index : mTasksToMove) {
-            int indexInt = index;
-            mTasks.remove(indexInt);
-            getRef(index).removeValue();
+        for (Task task : mTasksToMove) {
+            mTasks.remove(task);
+            mRef.child(task.getPushId()).removeValue();
         }
-        mTasksToMove = new ArrayList<>();
+        setIndexInFirebase();
+        cleanup();
+    }
+
+    public void moveToTasks() {
+        for (Task task : mTasks) {
+            boolean complete = task.isComplete();
+            if (!complete) {
+                FirebaseDatabase.getInstance().getReference("tasks").child(task.getPushId()).setValue(task);
+                mTasksToMove.add(task);
+            }
+        }
+        for (Task task : mTasksToMove) {
+            mTasks.remove(task);
+            mRef.child(task.getPushId()).removeValue();
+        }
         setIndexInFirebase();
         cleanup();
     }
@@ -123,7 +139,7 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
         for (Task task : mTasks) {
             int index = mTasks.indexOf(task);
             task.setIndex(Integer.toString(index));
-            FirebaseDatabase.getInstance().getReference("tasks").child(task.getPushId()).setValue(task);
+            mRef.child(task.getPushId()).setValue(task);
         }
     }
 
