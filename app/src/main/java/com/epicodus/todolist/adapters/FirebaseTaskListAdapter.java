@@ -103,12 +103,10 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
 
     public void moveComplete() {
         for (Task task : mTasks) {
-            Log.d("mTASKS", "#" + mTasks.indexOf(task) + ": " + task.getDescription());
             boolean complete = task.isComplete();
             if (complete) {
                 FirebaseDatabase.getInstance().getReference("complete").child(task.getPushId()).setValue(task);
                 mTasksToMove.add(task);
-                Log.d("INDEX of Complete", task.getDescription());
             }
         }
         for (Task task : mTasksToMove) {
@@ -116,7 +114,6 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
             mRef.child(task.getPushId()).removeValue();
         }
         setIndexInFirebase();
-        cleanup();
     }
 
     public void moveToTasks() {
@@ -132,7 +129,6 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
             mRef.child(task.getPushId()).removeValue();
         }
         setIndexInFirebase();
-        cleanup();
     }
 
     private void setIndexInFirebase() {
