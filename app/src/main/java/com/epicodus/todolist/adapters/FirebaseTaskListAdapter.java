@@ -1,8 +1,10 @@
 package com.epicodus.todolist.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -26,12 +28,14 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
     private Context mContext;
     private ChildEventListener mChildEventListener;
     private ArrayList<Task> mTasks = new ArrayList<>();
+    private ArrayList<Integer> mTasksToMove = new ArrayList<>();
 
     public FirebaseTaskListAdapter(Class<Task> modelClass, int modelLayout, Class<FirebaseTaskViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         mRef = ref.getRef();
         mOnStartDragListener = onStartDragListener;
         mContext = context;
+        mTasks = new ArrayList<>();
 
         mChildEventListener = mRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -96,32 +100,36 @@ public class FirebaseTaskListAdapter extends FirebaseRecyclerAdapter<Task, Fireb
         getRef(position).removeValue();
     }
 
-    private void moveComplete() {
+    public void moveComplete() {
         for (Task task : mTasks) {
             boolean complete = task.isComplete();
-            int index = mTasks.indexOf(task);
+            Integer index = mTasks.indexOf(task);
             if (complete) {
                 FirebaseDatabase.getInstance().getReference("complete").child(task.getPushId()).setValue(task);
-                mTasks.remove(index);
-                getRef(index).removeValue();
+                mTasksToMove.add(index);
             }
         }
+        for (Integer index : mTasksToMove) {
+            int indexInt = index;
+            mTasks.remove(indexInt);
+            getRef(index).removeValue();
+        }
+        mTasksToMove = new ArrayList<>();
+        setIndexInFirebase();
+        cleanup();
     }
 
     private void setIndexInFirebase() {
         for (Task task : mTasks) {
             int index = mTasks.indexOf(task);
-            DatabaseReference ref = getRef(index);
             task.setIndex(Integer.toString(index));
-            ref.setValue(task);
+            FirebaseDatabase.getInstance().getReference("tasks").child(task.getPushId()).setValue(task);
         }
     }
 
     @Override
     public void cleanup() {
         super.cleanup();
-        moveComplete();
-        setIndexInFirebase();
         mRef.removeEventListener(mChildEventListener);
     }
 }
