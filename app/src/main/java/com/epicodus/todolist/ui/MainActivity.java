@@ -77,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == mAddButton) {
             String newTask = mNewTask.getText().toString().trim();
+
+            if (newTask.equals("")) {
+                mNewTask.setError("Please enter a task");
+                return;
+            }
+
             Task task = new Task(newTask);
 
             DatabaseReference pushRef = FirebaseDatabase.getInstance().getReference("tasks").push();
