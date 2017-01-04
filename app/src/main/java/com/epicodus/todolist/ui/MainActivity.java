@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         mTaskFirebaseAdapter.moveComplete();
+        mCompletedFirebaseAdapter.moveToTasks();
     }
 
     @Override
