@@ -20,16 +20,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnStartDragListener {
-    @Bind(R.id.newTaskEditText) EditText mNewTask;
-    @Bind(R.id.addButton) Button mAddButton;
-    @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
-    @Bind(R.id.completedRecyclerView) RecyclerView mCompletedRecyclerView;
-    @Bind(R.id.showCompleted) TextView mShowCompletedTextView;
-    @Bind(R.id.hideCompleted) TextView mHideCompletedTextView;
+    @BindView(R.id.newTaskEditText) EditText mNewTask;
+    @BindView(R.id.addButton) Button mAddButton;
+    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+    @BindView(R.id.completedRecyclerView) RecyclerView mCompletedRecyclerView;
+    @BindView(R.id.showCompleted) TextView mShowCompletedTextView;
+    @BindView(R.id.hideCompleted) TextView mHideCompletedTextView;
 
     private FirebaseTaskListAdapter mTaskFirebaseAdapter;
     private FirebaseTaskListAdapter mCompletedFirebaseAdapter;
